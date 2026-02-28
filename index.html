@@ -354,10 +354,33 @@
 </script>
 
 <script>
+  // Contact form submission with animated toast notifications
   const form = document.getElementById("contactForm");
-  const status = document.getElementById("formStatus");
 
-  form.addEventListener("submit", async (e) => {
+  function showNotification(message, type = 'success', timeout = 4000){
+    const notif = document.createElement('div');
+    notif.className = 'notif ' + (type === 'success' ? 'notif-success' : (type === 'error' ? 'notif-error' : 'notif-info'));
+    notif.setAttribute('role', 'status');
+    notif.setAttribute('aria-live', 'polite');
+    notif.textContent = message;
+
+    document.body.appendChild(notif);
+    // allow browser to register element then trigger visible state
+    requestAnimationFrame(() => notif.classList.add('visible'));
+
+    // auto-dismiss
+    const hide = () => {
+      notif.classList.remove('visible');
+      notif.addEventListener('transitionend', () => notif.remove(), { once: true });
+    };
+
+    setTimeout(hide, timeout);
+
+    // dismiss on click
+    notif.addEventListener('click', hide);
+  }
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const formData = {
@@ -366,21 +389,25 @@
       message: form.message.value,
     };
 
-    status.innerText = "Sending...";
+    // show 'sending' indicator
+    showNotification('Sending...', 'info', 2500);
 
-    const response = await fetch("/api/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch('/api/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-    if (response.ok) {
-      status.innerText = "Message sent successfully!";
-      form.reset();
-    } else {
-      status.innerText = "Failed to send message.";
+      if (response.ok) {
+        showNotification('Message sent successfully!', 'success');
+        form.reset();
+      } else {
+        showNotification('Failed to send message. Please try again.', 'error');
+      }
+    } catch (err) {
+      showNotification('Network error. Message not sent.', 'error');
+      console.error('Contact form error:', err);
     }
   });
 </script>

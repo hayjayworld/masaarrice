@@ -808,3 +808,32 @@ body{
         display: none;
       }
     }
+
+    /* ================= NOTIFICATION / TOAST ================= */
+    .notif {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%) translateY(18px);
+      padding: 12px 18px;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.25);
+      opacity: 0;
+      transition: transform 320ms cubic-bezier(.2,.9,.2,1), opacity 320ms ease;
+      z-index: 2000;
+      max-width: 92%;
+      text-align: center;
+    }
+    .notif.visible{
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .notif-success{ background: #2ecc71; /* green */ }
+    .notif-error{ background: #e74c3c; /* red */ }
+    .notif-info{ background: #3498db; /* blue (sending) */ }
+
+    @media (max-width: 480px){
+      .notif{ bottom: 18px; padding: 12px 14px; font-size: 0.95rem; }
+    }
