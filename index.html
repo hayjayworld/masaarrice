@@ -304,21 +304,85 @@
         </div>
         <div class="contact-form">
           <h3>Send us a message</h3>
-          <form action="#" method="post">
-            <div class="form-group"><input type="text" placeholder="Your name" required></div>
-            <div class="form-group"><input type="email" placeholder="Email address" required></div>
-            <div class="form-group"><textarea rows="4" placeholder="Your enquiry about rice..."></textarea></div>
+          <form id="contactForm">
+            <div class="form-group"><input type="text" name="name" placeholder="Your name" required></div>
+            <div class="form-group"><input type="email" name="email" placeholder="Email address" required></div>
+            <div class="form-group"><textarea name="message" rows="4" placeholder="Your enquiry about rice..."></textarea></div>
             <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button>
           </form>
         </div>
       </div>
     </section>
 
-<footer>
-  © 2026 MASAAR RICE. All Rights Reserved.
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-top container">
+    <div class="footer-col about">
+      <img src="img/logo.png" alt="MASAAR RICE logo" class="footer-logo">
+      <p>MASAAR RICE — premium Nigerian rice manufacturer. Hygienically milled, polished and packed for wholesalers and households.</p>
+    </div>
+
+    <div class="footer-col contact">
+      <h4>Contact</h4>
+      <ul>
+        <li><i class="fas fa-map-pin" aria-hidden="true"></i> Ojagboro Isale Koko, Ilorin, Kwara State</li>
+        <li><i class="fas fa-phone-alt" aria-hidden="true"></i> <a href="tel:+2348039672445">+234 803 967 2445</a></li>
+        <li><i class="fas fa-envelope" aria-hidden="true"></i> <a href="mailto:murphy99@gmail.com">murphy99@gmail.com</a></li>
+        <li><i class="fab fa-whatsapp" aria-hidden="true"></i> <a href="https://wa.me/+2348039672445?text=Hello%20MASAAR%20RICE" target="_blank" rel="noopener">Order on WhatsApp</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col links">
+      <h4>Quick links</h4>
+      <ul>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="sitemap.xml">Sitemap</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom container">
+    <small>© 2026 MASAAR RICE. All Rights Reserved.</small>
+    <div class="social" aria-label="social links">
+      <a href="https://wa.me/+2348039672445?text=Hello%20MASAAR%20RICE" aria-label="WhatsApp" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i></a>
+      <a href="mailto:murphy99@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+  </div>
 </footer>
 
 <script src="scripts.js">
+</script>
+
+<script>
+  const form = document.getElementById("contactForm");
+  const status = document.getElementById("formStatus");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = {
+      name: form.name.value,
+      email: form.email.value,
+      message: form.message.value,
+    };
+
+    status.innerText = "Sending...";
+
+    const response = await fetch("/api/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      status.innerText = "Message sent successfully!";
+      form.reset();
+    } else {
+      status.innerText = "Failed to send message.";
+    }
+  });
 </script>
 
 </body>
